@@ -9,5 +9,6 @@ namespace CRUD_API.Services
     internal class Constants
     {
         internal const string jsonFilePath = @"..\CRUD API.Services\EmployeeData.json";
+        internal const string errorException = "No Employee Found";
     }
 }

@@ -45,7 +45,7 @@ namespace CRUD_API.Services.Implementation
             try
             {
                 if (!emplyeeData.Any(x => x.EmployeeId == emplyeeId))
-                    throw new Exception("No Employee Found");
+                    throw new Exception(Constants.errorException);
 
                 var itemToRemove = emplyeeData.FirstOrDefault(r => r.EmployeeId == emplyeeId);
                 emplyeeData.Remove(itemToRemove);
@@ -69,7 +69,7 @@ namespace CRUD_API.Services.Implementation
             try
             {
                 if (!emplyeeData.Any(x => x.EmployeeId == emplyeeId))
-                    throw new Exception("No Employee Found");
+                    throw new Exception(Constants.errorException);
 
                 return _mapper.Map<EmplyeeModel>(emplyeeData.FirstOrDefault(x => x.EmployeeId == emplyeeId));
             }
@@ -84,7 +84,7 @@ namespace CRUD_API.Services.Implementation
             try
             {
                 if (!emplyeeData.Any(x => x.EmployeeId == emplyeeId))
-                    throw new Exception("No Employee Found");
+                    throw new Exception(Constants.errorException);
 
                 var itemToUpdate = emplyeeData.FirstOrDefault(x => x.EmployeeId == emplyeeId);
                 itemToUpdate.Email = emplyeeModel.Email;
