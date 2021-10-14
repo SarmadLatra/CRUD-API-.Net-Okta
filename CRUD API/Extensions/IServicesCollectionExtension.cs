@@ -15,7 +15,6 @@ namespace Genius.User.Api.Extensions
         {
             services.AddSingleton<IOktaToken, OktaTokenService>();
             services.AddScoped<IEmployee, EmplyeeService>();
-
         }
     }
 }

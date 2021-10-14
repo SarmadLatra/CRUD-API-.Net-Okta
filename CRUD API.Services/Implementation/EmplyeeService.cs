@@ -75,7 +75,6 @@ namespace CRUD_API.Services.Implementation
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -98,7 +97,6 @@ namespace CRUD_API.Services.Implementation
             }
             catch (Exception)
             {
-
                 throw;
             }
 
