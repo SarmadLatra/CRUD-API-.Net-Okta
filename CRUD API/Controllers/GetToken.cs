@@ -19,7 +19,7 @@ namespace CRUD_API.Controllers
         {
             this._oktaService = oktaService;
         }
-        [HttpGet("getToken")]
+        [HttpGet]
         public async Task<string> getToken()
         {
             return await _oktaService.GetToken();
