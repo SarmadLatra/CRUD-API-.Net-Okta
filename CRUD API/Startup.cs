@@ -13,10 +13,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CRUD_API.Services.Implementation;
 
 namespace CRUD_API
 {
@@ -77,10 +80,26 @@ namespace CRUD_API
             services.AddDependency();
             services.AddAutoMapper(typeof(EmplyeeModel).Assembly);
             services.AddControllersWithViews();
+
+            // Hangfire Memory Storage Configuration
+            services.AddHangfire(config =>
+            config.SetDataCompatibilityLevel(compatibilityLevel: CompatibilityLevel.Version_170)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseDefaultTypeSerializer()
+            .UseMemoryStorage());
+            // Hangfire server
+            services.AddHangfireServer();
+            services.AddSingleton<IPrintJobService, PrintJobService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            // Hangfire Simple job Client from DI of .net framework
+            IBackgroundJobClient backgroundJobClient,
+            // Hangfire Recurring job
+            IRecurringJobManager recurringJobManager,
+            // Service Provider get serive from DI
+            IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -99,6 +118,14 @@ namespace CRUD_API
             {
                 endpoints.MapControllers();
             });
+
+            // For Hangfire Dashboard
+            app.UseHangfireDashboard();
+            backgroundJobClient.Enqueue(() => Console.WriteLine("Hangfire basic job"));
+            recurringJobManager.AddOrUpdate(
+                "Hangfire Recurring Job",
+                () => serviceProvider.GetService<IPrintJobService>().PrintMessage(),
+                Cron.Minutely);
         }
     }
 }
